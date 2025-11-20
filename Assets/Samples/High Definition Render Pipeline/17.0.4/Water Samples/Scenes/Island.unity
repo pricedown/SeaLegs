@@ -335,10 +335,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!1 &254042777
 GameObject:
@@ -385,10 +385,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!1 &265100560
 GameObject:
@@ -760,10 +760,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!1 &359277202
 GameObject:
@@ -939,77 +939,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
---- !u!21 &524738522
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs/Sample Water Decal
-  m_Shader: {fileID: -6465566751694194690, guid: 9f1661ed5b4d6ee4685ad5683b09a903, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _AFFECTS_FOAM
-  - _TYPE_BOX
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 0
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _Deformation_Texture:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Foam_Texture:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _AffectDeformation: 0
-    - _AffectFoam: 1
-    - _Cubic_Blend: 1
-    - _Elevation: 0.2
-    - _Remap_Max: 1
-    - _Remap_Min: 0
-    - _Skipped_Waves: 4
-    - _TYPE: 1
-    - _Wave_Length: 0.175
-    - _Wave_Offset: 0
-    - _Wave_Speed: 0.3
-    m_Colors:
-    - _Blend_Distance: {r: 0, g: 0, b: 0, a: 0}
-    - _Breaking_Range: {r: 0.4, g: 0.8, b: 0, a: 0}
-    - _Deep_Foam_Range: {r: 0.3, g: 0.7, b: 0, a: 0}
-    - _Wave_Blend: {r: 0.45, g: 0.5, b: 0, a: 0}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
---- !u!21 &527896674
+--- !u!21 &497981552
 Material:
   serializedVersion: 8
   m_ObjectHideFlags: 0
@@ -1092,7 +1027,7 @@ Material:
     - _AffectMetal: 0
     - _AffectNormal: 0
     - _AffectSmoothness: 1
-    - _ContrastNormalized: 0.02217251
+    - _ContrastNormalized: 0.0013822913
     - _DecalColorMask0: 15
     - _DecalColorMask1: 0
     - _DecalColorMask2: 3
@@ -1104,7 +1039,7 @@ Material:
     - _DecalStencilWriteMask: 16
     - _DrawOrder: 0
     - _FoamSmoothness: 0.3
-    - _NormalizedAliveTime: 0.57445216
+    - _NormalizedAliveTime: 0.51858974
     - _Opacity: 1
     - _OpticalFlowMultiplier: 0
     - _Speed: 1
@@ -1112,6 +1047,71 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 0.9877524, b: 0.8836478, a: 1}
     - _FlipbookSize: {r: 8, g: 8, b: 0, a: 0}
+  m_BuildTextureStacks: []
+  m_AllowLocking: 1
+--- !u!21 &524738522
+Material:
+  serializedVersion: 8
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Shader Graphs/Sample Water Decal
+  m_Shader: {fileID: -6465566751694194690, guid: 9f1661ed5b4d6ee4685ad5683b09a903, type: 3}
+  m_Parent: {fileID: 0}
+  m_ModifiedSerializedProperties: 0
+  m_ValidKeywords:
+  - _AFFECTS_FOAM
+  - _TYPE_BOX
+  m_InvalidKeywords: []
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_LockedProperties: 
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _Deformation_Texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Foam_Texture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_Lightmaps:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_LightmapsInd:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - unity_ShadowMasks:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Ints: []
+    m_Floats:
+    - _AffectDeformation: 0
+    - _AffectFoam: 1
+    - _Cubic_Blend: 1
+    - _Elevation: 0.2
+    - _Remap_Max: 1
+    - _Remap_Min: 0
+    - _Skipped_Waves: 4
+    - _TYPE: 1
+    - _Wave_Length: 0.175
+    - _Wave_Offset: 0
+    - _Wave_Speed: 0.3
+    m_Colors:
+    - _Blend_Distance: {r: 0, g: 0, b: 0, a: 0}
+    - _Breaking_Range: {r: 0.4, g: 0.8, b: 0, a: 0}
+    - _Deep_Foam_Range: {r: 0.3, g: 0.7, b: 0, a: 0}
+    - _Wave_Blend: {r: 0.45, g: 0.5, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!1 &535455941
@@ -1159,10 +1159,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!1 &706940902
 GameObject:
@@ -1209,10 +1209,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!1 &734206445
 GameObject:
@@ -1259,10 +1259,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!1 &739643066
 GameObject:
@@ -1488,10 +1488,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!1 &775289473
 GameObject:
@@ -1538,10 +1538,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!21 &789166984
 Material:
@@ -1654,10 +1654,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!1 &838711648
 GameObject:
@@ -1944,10 +1944,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!1 &901354416
 GameObject:
@@ -1994,10 +1994,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!21 &1026721870
 Material:
@@ -2502,10 +2502,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!1 &1178057722
 GameObject:
@@ -2603,111 +2603,6 @@ Material:
     - _Breaking_Range: {r: 0.6314906, g: 0.9402182, b: 0, a: 0}
     - _Deep_Foam_Range: {r: 0.09467062, g: 0.80836046, b: 0, a: 0}
     - _Wave_Blend: {r: 0.4876081, g: 0.5454477, b: 0, a: 0}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
---- !u!21 &1404148956
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_Shore Foam Atlas
-  m_Shader: {fileID: -6465566751694194690, guid: 1bccdb6a8192a174ea4732e842b70bb2, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _MATERIAL_AFFECTS_ALBEDO
-  - _MATERIAL_AFFECTS_MASKMAP
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _Base_Color:
-        m_Texture: {fileID: 2800000, guid: 96c942462f00f654ca6ac773eb41839d, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Normal_Map:
-        m_Texture: {fileID: 2800000, guid: b1ca54a0856b9df41a1f264f663698ae, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Opacity_Map:
-        m_Texture: {fileID: 2800000, guid: 56256dcaf45b73c42bfcc2f9ed5c14b8, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_0759673bde1c44eaa30dcacafda155f8_Texture_1:
-        m_Texture: {fileID: 2800000, guid: cca0ab1b12575b64f9f848f863aa495b, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_a7f3a3b273bd4452a47a71f259e31a2f_Texture_1:
-        m_Texture: {fileID: 2800000, guid: 3daf94270f45b514589e3f67f61b73c6, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_a7f3a3b273bd4452a47a71f259e31a2f_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 3daf94270f45b514589e3f67f61b73c6, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Texture2D:
-        m_Texture: {fileID: 2800000, guid: 7c0dc5f55bc3fd648b29c854019b4a44, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Texture2D_1:
-        m_Texture: {fileID: 2800000, guid: 56256dcaf45b73c42bfcc2f9ed5c14b8, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Texture2D_2:
-        m_Texture: {fileID: 2800000, guid: 5a8cce756186328428c64499ba7ab5f7, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _WaterMask:
-        m_Texture: {fileID: 2800000, guid: 08c152dce78961a41b88f45ed249a789, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _AffectAlbedo: 1
-    - _AffectMetal: 0
-    - _AffectNormal: 0
-    - _AffectSmoothness: 1
-    - _ContrastNormalized: 0
-    - _DecalColorMask0: 15
-    - _DecalColorMask1: 0
-    - _DecalColorMask2: 3
-    - _DecalColorMask3: 0
-    - _DecalMeshBiasType: 0
-    - _DecalMeshDepthBias: 0
-    - _DecalMeshViewBias: 0
-    - _DecalStencilRef: 16
-    - _DecalStencilWriteMask: 16
-    - _DrawOrder: 0
-    - _FoamSmoothness: 0.3
-    - _NormalizedAliveTime: 0.2170406
-    - _Opacity: 0.6797359
-    - _OpticalFlowMultiplier: 0
-    - _Speed: 1
-    - _WaterSmoothness: 0.9
-    m_Colors:
-    - _Color: {r: 1, g: 0.9877524, b: 0.8836478, a: 1}
-    - _FlipbookSize: {r: 8, g: 8, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!1 &1409779064
@@ -2837,10 +2732,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!21 &1479422451
 Material:
@@ -2992,10 +2887,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!21 &1614079740
 Material:
@@ -3158,10 +3053,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!21 &1689672050
 Material:
@@ -3623,10 +3518,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _rb: {fileID: 1059994333}
-  submersionDepth: 4
+  submersionDepth: 5
   buoyancyCoefficient: 0.13
-  linearDampingCoefficient: 0.99
-  angularDampingCoefficient: 8
+  linearDampingCoefficient: 3
+  angularDampingCoefficient: 25
   waterSurface: {fileID: 1146493789}
 --- !u!1 &1862284147
 GameObject:
@@ -3851,111 +3746,6 @@ Transform:
   - {fileID: 468807401}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!21 &2071480298
-Material:
-  serializedVersion: 8
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_Shore Foam Atlas
-  m_Shader: {fileID: -6465566751694194690, guid: 1bccdb6a8192a174ea4732e842b70bb2, type: 3}
-  m_Parent: {fileID: 0}
-  m_ModifiedSerializedProperties: 0
-  m_ValidKeywords:
-  - _MATERIAL_AFFECTS_ALBEDO
-  - _MATERIAL_AFFECTS_MASKMAP
-  m_InvalidKeywords: []
-  m_LightmapFlags: 4
-  m_EnableInstancingVariants: 1
-  m_DoubleSidedGI: 0
-  m_CustomRenderQueue: 2000
-  stringTagMap: {}
-  disabledShaderPasses: []
-  m_LockedProperties: 
-  m_SavedProperties:
-    serializedVersion: 3
-    m_TexEnvs:
-    - _Base_Color:
-        m_Texture: {fileID: 2800000, guid: 96c942462f00f654ca6ac773eb41839d, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Normal_Map:
-        m_Texture: {fileID: 2800000, guid: b1ca54a0856b9df41a1f264f663698ae, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Opacity_Map:
-        m_Texture: {fileID: 2800000, guid: 56256dcaf45b73c42bfcc2f9ed5c14b8, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_0759673bde1c44eaa30dcacafda155f8_Texture_1:
-        m_Texture: {fileID: 2800000, guid: cca0ab1b12575b64f9f848f863aa495b, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_a7f3a3b273bd4452a47a71f259e31a2f_Texture_1:
-        m_Texture: {fileID: 2800000, guid: 3daf94270f45b514589e3f67f61b73c6, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _SampleTexture2D_a7f3a3b273bd4452a47a71f259e31a2f_Texture_1_Texture2D:
-        m_Texture: {fileID: 2800000, guid: 3daf94270f45b514589e3f67f61b73c6, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Texture2D:
-        m_Texture: {fileID: 2800000, guid: 7c0dc5f55bc3fd648b29c854019b4a44, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Texture2D_1:
-        m_Texture: {fileID: 2800000, guid: 56256dcaf45b73c42bfcc2f9ed5c14b8, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _Texture2D_2:
-        m_Texture: {fileID: 2800000, guid: 5a8cce756186328428c64499ba7ab5f7, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - _WaterMask:
-        m_Texture: {fileID: 2800000, guid: 08c152dce78961a41b88f45ed249a789, type: 3}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_Lightmaps:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_LightmapsInd:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    - unity_ShadowMasks:
-        m_Texture: {fileID: 0}
-        m_Scale: {x: 1, y: 1}
-        m_Offset: {x: 0, y: 0}
-    m_Ints: []
-    m_Floats:
-    - _AffectAlbedo: 1
-    - _AffectMetal: 0
-    - _AffectNormal: 0
-    - _AffectSmoothness: 1
-    - _ContrastNormalized: 0.96044934
-    - _DecalColorMask0: 15
-    - _DecalColorMask1: 0
-    - _DecalColorMask2: 3
-    - _DecalColorMask3: 0
-    - _DecalMeshBiasType: 0
-    - _DecalMeshDepthBias: 0
-    - _DecalMeshViewBias: 0
-    - _DecalStencilRef: 16
-    - _DecalStencilWriteMask: 16
-    - _DrawOrder: 0
-    - _FoamSmoothness: 0.3
-    - _NormalizedAliveTime: 0.9900126
-    - _Opacity: 0
-    - _OpticalFlowMultiplier: 0
-    - _Speed: 1
-    - _WaterSmoothness: 0.9
-    m_Colors:
-    - _Color: {r: 1, g: 0.9877524, b: 0.8836478, a: 1}
-    - _FlipbookSize: {r: 8, g: 8, b: 0, a: 0}
-  m_BuildTextureStacks: []
-  m_AllowLocking: 1
 --- !u!33 &486687552681393304
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -4283,7 +4073,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 108698108604686408, guid: e46110eeda2666a4c8f3de3cfca49219, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1310574660477663442, guid: e46110eeda2666a4c8f3de3cfca49219, type: 3}
       propertyPath: m_Material
@@ -4303,7 +4093,7 @@ PrefabInstance:
       objectReference: {fileID: 1146493789}
     - target: {fileID: 3099328370189163287, guid: e46110eeda2666a4c8f3de3cfca49219, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.3164053
+      value: 7.9889417
       objectReference: {fileID: 0}
     - target: {fileID: 3606410978876658590, guid: e46110eeda2666a4c8f3de3cfca49219, type: 3}
       propertyPath: material
@@ -4311,7 +4101,7 @@ PrefabInstance:
       objectReference: {fileID: 789166984}
     - target: {fileID: 3616271980117617263, guid: e46110eeda2666a4c8f3de3cfca49219, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4871291557618222087, guid: e46110eeda2666a4c8f3de3cfca49219, type: 3}
       propertyPath: m_Size.y
@@ -4383,7 +4173,7 @@ PrefabInstance:
       objectReference: {fileID: 1146493789}
     - target: {fileID: 6319145467388717420, guid: e46110eeda2666a4c8f3de3cfca49219, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 5.437887
+      value: 0.31193352
       objectReference: {fileID: 0}
     - target: {fileID: 6514666487567467171, guid: e46110eeda2666a4c8f3de3cfca49219, type: 3}
       propertyPath: material
@@ -4403,11 +4193,11 @@ PrefabInstance:
       objectReference: {fileID: 1146493789}
     - target: {fileID: 6970427768716510598, guid: e46110eeda2666a4c8f3de3cfca49219, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 7.82262
+      value: 0.23686409
       objectReference: {fileID: 0}
     - target: {fileID: 7386530092662834918, guid: e46110eeda2666a4c8f3de3cfca49219, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -1,16 +1,14 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
 public class Floater : MonoBehaviour
 {
-    private static Dictionary<Rigidbody, int> _floaterCounts = new Dictionary<Rigidbody, int>();
+    private static readonly Dictionary<Rigidbody, int> _floaterCounts = new();
 
     [SerializeField] private Rigidbody _rb;
     public float submersionDepth = 1;
     public float buoyancyCoefficient = 1;
-
     public float linearDampingCoefficient = 1;
     public float angularDampingCoefficient = 5;
     public WaterSurface waterSurface;
@@ -21,6 +19,27 @@ public class Floater : MonoBehaviour
     private void Awake()
     {
         waterSurface = FindFirstObjectByType<WaterSurface>();
+    }
+
+    private void FixedUpdate()
+    {
+        var waterHeight = GetWaterHeightAt(transform.position);
+        var submersionRatio = 0f;
+        if (IsSubmerged(waterHeight)) submersionRatio = GetSubmersionRatio(waterHeight);
+        // Apply gravity
+        _rb.AddForceAtPosition(Physics.gravity / _floaterCounts[_rb], transform.position, ForceMode.Acceleration);
+        if (submersionRatio > 0f)
+        {
+            // Buoyant force
+            _rb.AddForceAtPosition(new Vector3(0f, Mathf.Abs(Physics.gravity.y) * submersionRatio, 0f),
+                transform.position, ForceMode.Acceleration);
+            // Damping linear and angular velocities
+            var dt = Time.fixedDeltaTime;
+            _rb.AddForce(-_rb.linearVelocity * (linearDampingCoefficient * submersionRatio * dt),
+                ForceMode.VelocityChange);
+            _rb.AddTorque(-_rb.angularVelocity * (angularDampingCoefficient * submersionRatio * dt),
+                ForceMode.VelocityChange);
+        }
     }
 
     private void OnEnable()
@@ -34,6 +53,13 @@ public class Floater : MonoBehaviour
         _floaterCounts[_rb]--;
         if (_floaterCounts[_rb] == 0)
             _floaterCounts.Remove(_rb);
+    }
+
+    private void OnDrawGizmos()
+    {
+        var waterHeight = GetWaterHeightAt(transform.position);
+        Gizmos.color = IsSubmerged(waterHeight) ? Color.green : Color.red;
+        Gizmos.DrawSphere(transform.position, 0.3f);
     }
 
     private float GetWaterHeightAt(Vector3 position)
@@ -50,38 +76,6 @@ public class Floater : MonoBehaviour
 
     private float GetSubmersionRatio(float waterHeight)
     {
-        return Mathf.Clamp01((waterHeight - transform.position.y) / submersionDepth);
-    }
-
-    private void FixedUpdate()
-    {
-        float waterHeight = GetWaterHeightAt(transform.position);
-        float submersionRatio = 0f;
-
-        if (IsSubmerged(waterHeight))
-        {
-            submersionRatio = GetSubmersionRatio(waterHeight);
-        }
-
-        // Apply gravity
-        _rb.AddForceAtPosition(Physics.gravity / _floaterCounts[_rb], transform.position, ForceMode.Acceleration);
-
-        if (submersionRatio > 0f)
-        {
-            // Buoyant force
-            _rb.AddForceAtPosition(new Vector3(0f, Mathf.Abs(Physics.gravity.y) * submersionRatio * buoyancyCoefficient, 0f), transform.position, ForceMode.Acceleration);
-
-            // Damping linear and angular velocities
-            float dt = Time.fixedDeltaTime;
-            _rb.AddForce(-_rb.linearVelocity * (linearDampingCoefficient * submersionRatio * dt), ForceMode.VelocityChange);
-            _rb.AddTorque(-_rb.angularVelocity * (angularDampingCoefficient * submersionRatio * dt), ForceMode.VelocityChange);
-        }
-    }
-
-    void OnDrawGizmos()
-    {
-        float waterHeight = GetWaterHeightAt(transform.position);
-        Gizmos.color = IsSubmerged(waterHeight) ? Color.green : Color.red;
-        Gizmos.DrawSphere(transform.position, 0.3f);
+        return Mathf.Clamp01((waterHeight - transform.position.y) / submersionDepth * buoyancyCoefficient);
     }
 }
