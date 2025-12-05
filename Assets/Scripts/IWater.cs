@@ -1,7 +1,9 @@
 using UnityEngine;
-using UnityEngine.Rendering.HighDefinition;
 
-public interface IWater
+namespace SeaLegs
 {
-    public abstract float GetWaterHeightAt(Vector3 position);
+    public interface IWater
+    {
+        public Vector3 GetWaveDisplacementAt(Vector3 position);
+    }
 }

@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
+using UnityEngine.Serialization;
 
 public class Floater : MonoBehaviour
 {
-    private static readonly Dictionary<Rigidbody, int> _floaterCounts = new();
+    private static readonly Dictionary<Rigidbody, int> RigidbodyFloaterCounts = new();
 
-    [SerializeField] private Rigidbody _rb;
+    [FormerlySerializedAs("_rb")] [SerializeField] private Rigidbody rb;
     public float submersionDepth = 1;
     public float buoyancyCoefficient = 1;
     public float linearDampingCoefficient = 1;
@@ -18,6 +19,9 @@ public class Floater : MonoBehaviour
 
     private void Awake()
     {
+        if (rb == null)
+            Debug.LogError($"Rb of {gameObject.name} is null");
+        
         waterSurface = FindFirstObjectByType<WaterSurface>();
     }
 
@@ -27,32 +31,32 @@ public class Floater : MonoBehaviour
         var submersionRatio = 0f;
         if (IsSubmerged(waterHeight)) submersionRatio = GetSubmersionRatio(waterHeight);
         // Apply gravity
-        _rb.AddForceAtPosition(Physics.gravity / _floaterCounts[_rb], transform.position, ForceMode.Acceleration);
+        rb.AddForceAtPosition(Physics.gravity / RigidbodyFloaterCounts[rb], transform.position, ForceMode.Acceleration);
         if (submersionRatio > 0f)
         {
             // Buoyant force
-            _rb.AddForceAtPosition(new Vector3(0f, Mathf.Abs(Physics.gravity.y) * submersionRatio, 0f),
+            rb.AddForceAtPosition(new Vector3(0f, Mathf.Abs(Physics.gravity.y) * submersionRatio, 0f),
                 transform.position, ForceMode.Acceleration);
             // Damping linear and angular velocities
             var dt = Time.fixedDeltaTime;
-            _rb.AddForce(-_rb.linearVelocity * (linearDampingCoefficient * submersionRatio * dt),
+            rb.AddForce(-rb.linearVelocity * (linearDampingCoefficient * submersionRatio * dt),
                 ForceMode.VelocityChange);
-            _rb.AddTorque(-_rb.angularVelocity * (angularDampingCoefficient * submersionRatio * dt),
+            rb.AddTorque(-rb.angularVelocity * (angularDampingCoefficient * submersionRatio * dt),
                 ForceMode.VelocityChange);
         }
     }
 
     private void OnEnable()
     {
-        _floaterCounts.TryAdd(_rb, 0);
-        _floaterCounts[_rb]++;
+        RigidbodyFloaterCounts.TryAdd(rb, 0);
+        RigidbodyFloaterCounts[rb]++;
     }
 
     private void OnDisable()
     {
-        _floaterCounts[_rb]--;
-        if (_floaterCounts[_rb] == 0)
-            _floaterCounts.Remove(_rb);
+        RigidbodyFloaterCounts[rb]--;
+        if (RigidbodyFloaterCounts[rb] == 0)
+            RigidbodyFloaterCounts.Remove(rb);
     }
 
     private void OnDrawGizmos()
