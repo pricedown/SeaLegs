@@ -1,18 +1,29 @@
-using SeaLegs;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
-public class HdrpWater : MonoBehaviour, IWater
+namespace SeaLegs
 {
-    public WaterSurface waterSurface;
-
-    private WaterSearchParameters _searchParams;
-
-    Vector3 IWater.GetWaveDisplacementAt(Vector3 position)
+    public class HdrpWater : MonoBehaviour, IWater
     {
-        WaterSearchResult _waterSurfacePoint;
-        _searchParams.startPositionWS = position;
-        waterSurface.ProjectPointOnWaterSurface(_searchParams, out _waterSurfacePoint);
-        return new Vector3(0, _waterSurfacePoint.projectedPositionWS.y, 0);
+        [SerializeField] private WaterSurface waterSurface;
+
+        private WaterSearchParameters _searchParams;
+        private WaterSearchResult _searchResult;
+
+        private void Awake()
+        {
+            if (waterSurface == null)
+                waterSurface = FindFirstObjectByType<WaterSurface>();
+
+            if (waterSurface == null)
+                Debug.LogError("No watersurface found");
+        }
+
+        public Vector3 GetWaveDisplacementAt(Vector3 position)
+        {
+            _searchParams.startPositionWS = position;
+            waterSurface.ProjectPointOnWaterSurface(_searchParams, out _searchResult);
+            return _searchResult.projectedPositionWS;
+        }
     }
 }

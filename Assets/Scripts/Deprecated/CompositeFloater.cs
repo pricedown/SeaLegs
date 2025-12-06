@@ -1,8 +1,10 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 namespace SeaLegs
 {
+    [Obsolete("Composite floater is obsolete, please use BuoyancyBody instead")]
     public class CompositeFloater : MonoBehaviour
     {
         [SerializeField] public List<Transform> floaters = new();
@@ -53,6 +55,7 @@ namespace SeaLegs
         void Awake()
         {
             _rb.useGravity = false;
+            Debug.LogWarning($"{gameObject.name}: Composite floater is obsolete, please use BuoyancyBody instead");
         }
 
         bool IsSubmerged(Vector3 position, float waterHeight)

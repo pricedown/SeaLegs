@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace SeaLegs
 {
-    public class ShipMovement : MonoBehaviour
+    public class ShipController : MonoBehaviour
     { 
         public Rigidbody shipRb;
         public Vector3 velocity = new Vector3(1f, 0f, 0f);
