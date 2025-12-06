@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 255be54046e84e8d82f977cacf4bd851, type: 3}
   m_Name: BuoyancySettings
   m_EditorClassIdentifier: 
-  submersionDepth: 2.77
-  buoyancyCoefficient: 0.48
+  submersionDepth: 3
+  buoyancyCoefficient: 0.8
   linearDamping: 3
   angularDamping: 0.8
   gizmoRadius: 0.3
