@@ -1,9 +1,10 @@
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Rendering.HighDefinition;
 
 namespace SeaLegs
 {
-    public class HdrpWater : MonoBehaviour, IWater
+    public class HdrpWater : WaterBase, IWater
     {
         [SerializeField] private WaterSurface waterSurface;
 
@@ -19,11 +20,11 @@ namespace SeaLegs
                 Debug.LogError("No watersurface found");
         }
 
-        public Vector3 GetWaveDisplacementAt(Vector3 position)
+        public override Vector3 GetWaveDisplacementAt(Vector3 position)
         {
             _searchParams.startPositionWS = position;
             waterSurface.ProjectPointOnWaterSurface(_searchParams, out _searchResult);
-            return _searchResult.projectedPositionWS;
+            return (Vector3)_searchResult.projectedPositionWS -  new Vector3(0, waterSurface.transform.position.y, 0);
         }
     }
 }

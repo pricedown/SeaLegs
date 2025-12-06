@@ -9,10 +9,10 @@ namespace SeaLegs
         [Header("References")] 
         [SerializeField] private Rigidbody rb;
         [SerializeField] private BuoyancySettings settings;
+        [SerializeField] private WaterBase _water;
 
         [Header("Floater Points")] 
         [SerializeField] private List<FloaterPoint> floaterPoints = new();
-        private IWater _water;
 
         // IBuoyant
         public float TotalBuoyancy { get; private set; }
@@ -32,17 +32,8 @@ namespace SeaLegs
 
         private void Start()
         {
-            // Find the water if unset
             if (_water == null)
-            {
-                var waterBehaviours = FindObjectsByType<MonoBehaviour>(FindObjectsSortMode.None);
-                foreach (var behaviour in waterBehaviours)
-                    if (behaviour is IWater water)
-                        _water = water;
-            }
-            
-            if (_water == null)
-                Debug.LogError($"No water found");
+                Debug.LogError($"No water set on {gameObject.name}");
         }
 
         private void FixedUpdate()
@@ -100,7 +91,8 @@ namespace SeaLegs
             var angularDampTorque = -rb.angularVelocity * (settings.angularDamping * submersionRatio * dt);
             rb.AddTorque(angularDampTorque, ForceMode.VelocityChange);
         }
-
+        
+        [ContextMenu("Auto-Find Floater Points")]
         private void AutoFindFloaterPoints()
         {
             floaterPoints.Clear();
@@ -123,15 +115,15 @@ namespace SeaLegs
             {
                 if (floater.transform == null) continue;
 
-                var waterHeight = _water.GetWaveDisplacementAt(floater.transform.position).y;
-                var isSubmerged = floater.transform.position.y < waterHeight;
+                var displacement =_water.GetWaveDisplacementAt(floater.transform.position); 
+                var depth = displacement.y - floater.transform.position.y;
+                var isSubmerged = depth > 0;
 
                 Gizmos.color = isSubmerged ? settings.submergedColor : settings.aboveWaterColor;
                 Gizmos.DrawSphere(floater.transform.position, settings.gizmoRadius);
 
                 Gizmos.color = Color.cyan;
-                var waterPoint = new Vector3(floater.transform.position.x, waterHeight, floater.transform.position.z);
-                Gizmos.DrawLine(floater.transform.position, waterPoint);
+                Gizmos.DrawLine(floater.transform.position, floater.transform.position + new Vector3(0, depth, 0));
             }
         }
 

@@ -23,8 +23,6 @@ namespace SeaLegs.Deprecated
 
         private void Awake()
         {
-            Debug.LogWarning($"{gameObject.name}: Floater is obsolete, please use BuoyancyBody instead");
-            
             if (rb == null)
                 Debug.LogError($"Rb of {gameObject.name} is null");
         
@@ -56,6 +54,8 @@ namespace SeaLegs.Deprecated
         {
             RigidbodyFloaterCounts.TryAdd(rb, 0);
             RigidbodyFloaterCounts[rb]++;
+            
+            Debug.LogWarning($"{gameObject.name}: Floater is obsolete, please use BuoyancyBody instead");
         }
 
         private void OnDisable()

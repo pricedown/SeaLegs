@@ -55,6 +55,10 @@ namespace SeaLegs
         void Awake()
         {
             _rb.useGravity = false;
+        }
+
+        private void OnEnable()
+        {
             Debug.LogWarning($"{gameObject.name}: Composite floater is obsolete, please use BuoyancyBody instead");
         }
 

@@ -1,0 +1,21 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 255be54046e84e8d82f977cacf4bd851, type: 3}
+  m_Name: BuoyancySettings
+  m_EditorClassIdentifier: 
+  submersionDepth: 2.77
+  buoyancyCoefficient: 0.48
+  linearDamping: 3
+  angularDamping: 0.8
+  gizmoRadius: 0.3
+  submergedColor: {r: 0, g: 1, b: 0, a: 1}
+  aboveWaterColor: {r: 1, g: 0, b: 0, a: 1}
