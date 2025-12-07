@@ -15,6 +15,7 @@ namespace SeaLegs
 
         [Header("Debug")] 
         public bool showSubmergedTriangles = true;
-        public bool logForces;
+        public bool logForces = false;
+        public Color submergedColor = new Color(0f, 1f, 0f, 0.3f);
     }
 }

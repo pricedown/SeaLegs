@@ -20,6 +20,7 @@ namespace SeaLegs
         [Header("Debug")] [SerializeField] private bool logForces;
 
         private HydrostaticCalculator _calculator;
+
         private HullTriangle[] _localHullTriangles;
         private HullTriangle[] _worldHullTriangles;
 
@@ -70,13 +71,29 @@ namespace SeaLegs
         }
 
 
+        
         #region Debug
+
+        private Vector3 _lastForce;
+        private Vector3 _lastTorque;
 
         private void OnDrawGizmos()
         {
+            if (_hullBuoyancySettings == null) return;
+            
+            // Draw force arrow
+            if (rb != null && _lastForce.sqrMagnitude > 0.01f)
+            {
+                Gizmos.color = Color.green;
+                Vector3 forceDir = _lastForce.normalized;
+                float forceScale = Mathf.Log10(_lastForce.magnitude + 1) * 0.5f;
+                Gizmos.DrawRay(rb.worldCenterOfMass, forceDir * forceScale);
+            }
+            
+            if (!_hullBuoyancySettings.showSubmergedTriangles) return;
             if (_calculator == null) return;
 
-            Gizmos.color = new Color(0f, 1f, 0f, 0.5f);
+            Gizmos.color = _hullBuoyancySettings.submergedColor;
             foreach (var tri in _calculator.SubmergedTriangles)
             {
                 Gizmos.DrawLine(tri.v0, tri.v1);
@@ -84,7 +101,6 @@ namespace SeaLegs
                 Gizmos.DrawLine(tri.v2, tri.v0);
             }
         }
-
         #endregion
 
         public float TotalBuoyancy { get; private set; }
