@@ -19,6 +19,9 @@ namespace SeaLegs
         [SerializeField] private float waterDensity = 1025f;
 
         [Header("Damping")] [SerializeField] private float linearDamping = 1f;
+        
+        [Header("Debug")]
+        [SerializeField] private bool logForces = false;
 
         [SerializeField] private float angularDamping = 5f;
         private HydrostaticCalculator _calculator;
@@ -38,7 +41,7 @@ namespace SeaLegs
 
         private void FixedUpdate()
         {
-            if (_water == null || _localHullTriangles == null)
+            if (_water == null || _localHullTriangles == null || _localHullTriangles.Length == 0) 
                 return;
 
             TransformHullToWorld();
@@ -50,6 +53,11 @@ namespace SeaLegs
                 rb.worldCenterOfMass,
                 waterDensity
             );
+            
+            if (logForces)
+            {
+                Debug.Log($"Buoyancy: {result.Force.y:F0}N, SubTris: {result.SubmergedTriangleCount}");
+            }
 
             rb.AddForce(Physics.gravity, ForceMode.Acceleration);
             rb.AddForce(result.Force, ForceMode.Force);
@@ -115,5 +123,21 @@ namespace SeaLegs
             var angularDampTorque = -rb.angularVelocity * (angularDamping * submersionRatio * dt);
             rb.AddTorque(angularDampTorque, ForceMode.VelocityChange);
         }
+        
+        
+        #region Debug
+        private void OnDrawGizmos()
+        {
+            if (_calculator == null) return;
+            
+            Gizmos.color = new Color(0f, 1f, 0f, 0.5f);
+            foreach (var tri in _calculator.SubmergedTriangles)
+            {
+                Gizmos.DrawLine(tri.v0, tri.v1);
+                Gizmos.DrawLine(tri.v1, tri.v2);
+                Gizmos.DrawLine(tri.v2, tri.v0);
+            }
+        }
+        #endregion
     }
 }

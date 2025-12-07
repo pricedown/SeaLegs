@@ -25,6 +25,7 @@ namespace SeaLegs
     public class HydrostaticCalculator
     {
         private readonly List<HullTriangle> _submergedTriangles = new(64);
+        public IReadOnlyList<HullTriangle> SubmergedTriangles => _submergedTriangles;
 
         public HydrostaticResult Calculate(
             HullTriangle[] hullTriangles,
