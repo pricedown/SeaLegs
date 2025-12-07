@@ -51,10 +51,15 @@ namespace SeaLegs
                 waterDensity
             );
 
-            // Apply forces
             rb.AddForce(Physics.gravity, ForceMode.Acceleration);
             rb.AddForce(result.Force, ForceMode.Force);
             rb.AddTorque(result.Torque, ForceMode.Force);
+
+            var submersion = (float)result.SubmergedTriangleCount / Mathf.Max(1, _worldHullTriangles.Length);
+            ApplyDamping(submersion);
+
+            SubmersionRatio = submersion;
+            TotalBuoyancy = result.Force.y;
         }
 
         public float TotalBuoyancy { get; private set; }
@@ -98,6 +103,17 @@ namespace SeaLegs
                     vertices[triangles[triIndex + 2]]
                 );
             }
+        }
+
+        private void ApplyDamping(float submersionRatio)
+        {
+            var dt = Time.fixedDeltaTime;
+
+            var linearDampForce = -rb.linearVelocity * (linearDamping * submersionRatio * dt);
+            rb.AddForce(linearDampForce, ForceMode.VelocityChange);
+
+            var angularDampTorque = -rb.angularVelocity * (angularDamping * submersionRatio * dt);
+            rb.AddTorque(angularDampTorque, ForceMode.VelocityChange);
         }
     }
 }
