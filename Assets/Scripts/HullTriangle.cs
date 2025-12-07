@@ -1,4 +1,4 @@
-﻿using System.Numerics;
+﻿using UnityEngine;
 
 namespace SeaLegs
 {
@@ -17,8 +17,8 @@ namespace SeaLegs
         public Vector3 v0, v1, v2;
         public Vector3 Center => (v0 + v1 + v2) / 3f;
         public Vector3 Normal => Vector3.Cross(v1 - v0, v2 - v0);
-        public Vector3 UnitNormal => Vector3.Normalize(Normal);
-        public float Area => Normal.Length() * 0.5f;
+        public Vector3 UnitNormal => Normal.normalized;
+        public float Area => Normal.magnitude * 0.5f; // triangle maf : )
 
         public HullTriangle(Vector3 v0, Vector3 v1, Vector3 v2)
         {
