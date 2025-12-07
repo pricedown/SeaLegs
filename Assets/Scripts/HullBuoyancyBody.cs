@@ -13,20 +13,12 @@ namespace SeaLegs
         private Rigidbody rb;
 
         [SerializeField] private WaterBase _water;
+        [SerializeField] private HullBuoyancySettings _hullBuoyancySettings;
 
-        [Header("Hull")] 
-        [SerializeField] private MeshFilter hullMeshFilter;
-        [Range(0.001f, 10f)]
-        [SerializeField] private float forceScale = 1f;
+        [Header("Hull")] [SerializeField] private MeshFilter hullMeshFilter;
 
-        [SerializeField] private float waterDensity = 1025f;
+        [Header("Debug")] [SerializeField] private bool logForces;
 
-        [Header("Damping")] [SerializeField] private float linearDamping = 1f;
-        
-        [Header("Debug")]
-        [SerializeField] private bool logForces = false;
-
-        [SerializeField] private float angularDamping = 5f;
         private HydrostaticCalculator _calculator;
         private HullTriangle[] _localHullTriangles;
         private HullTriangle[] _worldHullTriangles;
@@ -44,7 +36,7 @@ namespace SeaLegs
 
         private void FixedUpdate()
         {
-            if (_water == null || _localHullTriangles == null || _localHullTriangles.Length == 0) 
+            if (_water == null || _localHullTriangles == null || _localHullTriangles.Length == 0)
                 return;
 
             TransformHullToWorld();
@@ -54,32 +46,46 @@ namespace SeaLegs
                 _worldHullTriangles,
                 _water,
                 rb.worldCenterOfMass,
-                waterDensity
+                _hullBuoyancySettings.waterDensity
             );
-            
 
 
             rb.AddForce(Physics.gravity, ForceMode.Acceleration);
-            
+
             // rb.AddForce(result.Force, ForceMode.Force);
             // rb.AddTorque(result.Torque, ForceMode.Force);
-            Vector3 scaledForce = result.Force * forceScale;
-            Vector3 scaledTorque = result.Torque * forceScale;
-                        
+            var scaledForce = result.Force * _hullBuoyancySettings.forceScale;
+            var scaledTorque = result.Torque * _hullBuoyancySettings.forceScale;
+
             rb.AddForce(scaledForce, ForceMode.Force);
             rb.AddTorque(scaledTorque, ForceMode.Force);
-            
-            if (logForces)
-            {
-                Debug.Log($"Buoyancy: {scaledForce.y:F0}N, SubTris: {result.SubmergedTriangleCount}");
-            }
-            
+
+            if (logForces) Debug.Log($"Buoyancy: {scaledForce.y:F0}N, SubTris: {result.SubmergedTriangleCount}");
+
             var submersion = (float)result.SubmergedTriangleCount / Mathf.Max(1, _worldHullTriangles.Length);
             ApplyDamping(submersion);
 
             SubmersionRatio = submersion;
             TotalBuoyancy = scaledForce.y;
         }
+
+
+        #region Debug
+
+        private void OnDrawGizmos()
+        {
+            if (_calculator == null) return;
+
+            Gizmos.color = new Color(0f, 1f, 0f, 0.5f);
+            foreach (var tri in _calculator.SubmergedTriangles)
+            {
+                Gizmos.DrawLine(tri.v0, tri.v1);
+                Gizmos.DrawLine(tri.v1, tri.v2);
+                Gizmos.DrawLine(tri.v2, tri.v0);
+            }
+        }
+
+        #endregion
 
         public float TotalBuoyancy { get; private set; }
         public float SubmersionRatio { get; private set; }
@@ -128,27 +134,11 @@ namespace SeaLegs
         {
             var dt = Time.fixedDeltaTime;
 
-            var linearDampForce = -rb.linearVelocity * (linearDamping * submersionRatio * dt);
+            var linearDampForce = -rb.linearVelocity * (_hullBuoyancySettings.linearDamping * submersionRatio * dt);
             rb.AddForce(linearDampForce, ForceMode.VelocityChange);
 
-            var angularDampTorque = -rb.angularVelocity * (angularDamping * submersionRatio * dt);
+            var angularDampTorque = -rb.angularVelocity * (_hullBuoyancySettings.angularDamping * submersionRatio * dt);
             rb.AddTorque(angularDampTorque, ForceMode.VelocityChange);
         }
-        
-        
-        #region Debug
-        private void OnDrawGizmos()
-        {
-            if (_calculator == null) return;
-            
-            Gizmos.color = new Color(0f, 1f, 0f, 0.5f);
-            foreach (var tri in _calculator.SubmergedTriangles)
-            {
-                Gizmos.DrawLine(tri.v0, tri.v1);
-                Gizmos.DrawLine(tri.v1, tri.v2);
-                Gizmos.DrawLine(tri.v2, tri.v0);
-            }
-        }
-        #endregion
     }
 }
