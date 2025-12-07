@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace SeaLegs
 {
@@ -9,23 +10,32 @@ namespace SeaLegs
     [RequireComponent(typeof(Rigidbody))]
     public class HullBuoyancyBody : MonoBehaviour, IBuoyant
     {
+        private static readonly int warnTriCount = 100;
+
         [Header("References")] [SerializeField]
         private Rigidbody rb;
 
         [SerializeField] private WaterBase _water;
-        [SerializeField] private HullBuoyancySettings _hullBuoyancySettings;
+
+        [FormerlySerializedAs("_hullBuoyancySettings")] [SerializeField]
+        private HullBuoyancySettings settings;
 
         [Header("Hull")] [SerializeField] private MeshFilter hullMeshFilter;
 
         [Header("Debug")] [SerializeField] private bool logForces;
 
-        private HydrostaticCalculator _calculator;
+        [Tooltip("Try this if direction of force is wrong")] [SerializeField]
+        private bool flipNormals;
 
+        private HydrostaticCalculator _calculator;
         private HullTriangle[] _localHullTriangles;
         private HullTriangle[] _worldHullTriangles;
 
         private void Awake()
         {
+            if (settings == null)
+                Debug.LogError($"No BuoyancySettings on {gameObject.name}");
+
             // Disable gravity so we can apply our own
             rb.useGravity = false;
 
@@ -33,6 +43,12 @@ namespace SeaLegs
             BuildHullTriangles();
 
             _calculator = new HydrostaticCalculator();
+        }
+
+        private void Start()
+        {
+            if (_water == null)
+                Debug.LogError($"No water set on {gameObject.name}");
         }
 
         private void FixedUpdate()
@@ -47,7 +63,7 @@ namespace SeaLegs
                 _worldHullTriangles,
                 _water,
                 rb.worldCenterOfMass,
-                _hullBuoyancySettings.waterDensity
+                settings.waterDensity
             );
 
 
@@ -55,8 +71,8 @@ namespace SeaLegs
 
             // rb.AddForce(result.Force, ForceMode.Force);
             // rb.AddTorque(result.Torque, ForceMode.Force);
-            var scaledForce = result.Force * _hullBuoyancySettings.forceScale;
-            var scaledTorque = result.Torque * _hullBuoyancySettings.forceScale;
+            var scaledForce = result.Force * settings.forceScale;
+            var scaledTorque = result.Torque * settings.forceScale;
 
             rb.AddForce(scaledForce, ForceMode.Force);
             rb.AddTorque(scaledTorque, ForceMode.Force);
@@ -70,39 +86,7 @@ namespace SeaLegs
             TotalBuoyancy = scaledForce.y;
         }
 
-
-        
-        #region Debug
-
-        private Vector3 _lastForce;
-        private Vector3 _lastTorque;
-
-        private void OnDrawGizmos()
-        {
-            if (_hullBuoyancySettings == null) return;
-            
-            // Draw force arrow
-            if (rb != null && _lastForce.sqrMagnitude > 0.01f)
-            {
-                Gizmos.color = Color.green;
-                Vector3 forceDir = _lastForce.normalized;
-                float forceScale = Mathf.Log10(_lastForce.magnitude + 1) * 0.5f;
-                Gizmos.DrawRay(rb.worldCenterOfMass, forceDir * forceScale);
-            }
-            
-            if (!_hullBuoyancySettings.showSubmergedTriangles) return;
-            if (_calculator == null) return;
-
-            Gizmos.color = _hullBuoyancySettings.submergedColor;
-            foreach (var tri in _calculator.SubmergedTriangles)
-            {
-                Gizmos.DrawLine(tri.v0, tri.v1);
-                Gizmos.DrawLine(tri.v1, tri.v2);
-                Gizmos.DrawLine(tri.v2, tri.v0);
-            }
-        }
-        #endregion
-
+        // IBuoyant
         public float TotalBuoyancy { get; private set; }
         public float SubmersionRatio { get; private set; }
         public bool IsFloating => SubmersionRatio > 0f;
@@ -124,6 +108,8 @@ namespace SeaLegs
             if (hullMeshFilter == null)
             {
                 Debug.LogError($"No hull mesh on {gameObject.name}");
+                _localHullTriangles = new HullTriangle[0];
+                _worldHullTriangles = new HullTriangle[0];
                 return;
             }
 
@@ -132,29 +118,75 @@ namespace SeaLegs
             var triangles = mesh.triangles;
             var triCount = triangles.Length / 3;
 
+            if (triCount > warnTriCount)
+                Debug.LogWarning($"{gameObject.name}: Hull mesh has {triCount} triangles - use a simplified mesh");
+
             _localHullTriangles = new HullTriangle[triCount];
             _worldHullTriangles = new HullTriangle[triCount];
 
             for (var i = 0; i < triCount; i++)
             {
                 var triIndex = i * 3;
-                _localHullTriangles[i] = new HullTriangle(
-                    vertices[triangles[triIndex]],
-                    vertices[triangles[triIndex + 1]],
-                    vertices[triangles[triIndex + 2]]
-                );
+                if (flipNormals)
+                    // Swap V1 and V2 to flip normal direction
+                    _localHullTriangles[i] = new HullTriangle(
+                        vertices[triangles[triIndex]],
+                        vertices[triangles[triIndex + 2]],
+                        vertices[triangles[triIndex + 1]]
+                    );
+                else
+                    _localHullTriangles[i] = new HullTriangle(
+                        vertices[triangles[triIndex]],
+                        vertices[triangles[triIndex + 1]],
+                        vertices[triangles[triIndex + 2]]
+                    );
             }
+
+            Debug.Log($"Built hull with {triCount} triangles");
         }
 
         private void ApplyDamping(float submersionRatio)
         {
             var dt = Time.fixedDeltaTime;
 
-            var linearDampForce = -rb.linearVelocity * (_hullBuoyancySettings.linearDamping * submersionRatio * dt);
+            var linearDampForce = -rb.linearVelocity * (settings.linearDamping * submersionRatio * dt);
             rb.AddForce(linearDampForce, ForceMode.VelocityChange);
 
-            var angularDampTorque = -rb.angularVelocity * (_hullBuoyancySettings.angularDamping * submersionRatio * dt);
+            var angularDampTorque = -rb.angularVelocity * (settings.angularDamping * submersionRatio * dt);
             rb.AddTorque(angularDampTorque, ForceMode.VelocityChange);
         }
+
+
+        #region Debug
+
+        private Vector3 _lastForce;
+        private Vector3 _lastTorque;
+
+        private void OnDrawGizmos()
+        {
+            if (settings == null) return;
+
+            // Draw force arrow
+            if (rb != null && _lastForce.sqrMagnitude > 0.01f)
+            {
+                Gizmos.color = Color.green;
+                var forceDir = _lastForce.normalized;
+                var forceScale = Mathf.Log10(_lastForce.magnitude + 1) * 0.5f;
+                Gizmos.DrawRay(rb.worldCenterOfMass, forceDir * forceScale);
+            }
+
+            if (!settings.showSubmergedTriangles) return;
+            if (_calculator == null) return;
+
+            Gizmos.color = settings.submergedColor;
+            foreach (var tri in _calculator.SubmergedTriangles)
+            {
+                Gizmos.DrawLine(tri.v0, tri.v1);
+                Gizmos.DrawLine(tri.v1, tri.v2);
+                Gizmos.DrawLine(tri.v2, tri.v0);
+            }
+        }
+
+        #endregion
     }
 }
