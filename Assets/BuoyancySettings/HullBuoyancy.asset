@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   waterDensity: 1025
   forceScale: 0.13
-  linearDamping: 1
-  angularDamping: 5
+  linearDamping: 1.74
+  angularDamping: 18.17
   showSubmergedTriangles: 1
   logForces: 0
+  submergedColor: {r: 0, g: 1, b: 0, a: 0.3}

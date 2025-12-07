@@ -74,6 +74,9 @@ namespace SeaLegs
             var scaledForce = result.Force * settings.forceScale;
             var scaledTorque = result.Torque * settings.forceScale;
 
+            _lastForce = scaledForce;
+            _lastTorque = scaledTorque;
+            
             rb.AddForce(scaledForce, ForceMode.Force);
             rb.AddTorque(scaledTorque, ForceMode.Force);
 
