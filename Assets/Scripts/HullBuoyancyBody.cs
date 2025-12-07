@@ -14,7 +14,10 @@ namespace SeaLegs
 
         [SerializeField] private WaterBase _water;
 
-        [Header("Hull")] [SerializeField] private MeshFilter hullMeshFilter;
+        [Header("Hull")] 
+        [SerializeField] private MeshFilter hullMeshFilter;
+        [Range(0.001f, 10f)]
+        [SerializeField] private float forceScale = 1f;
 
         [SerializeField] private float waterDensity = 1025f;
 
@@ -54,20 +57,28 @@ namespace SeaLegs
                 waterDensity
             );
             
-            if (logForces)
-            {
-                Debug.Log($"Buoyancy: {result.Force.y:F0}N, SubTris: {result.SubmergedTriangleCount}");
-            }
+
 
             rb.AddForce(Physics.gravity, ForceMode.Acceleration);
-            rb.AddForce(result.Force, ForceMode.Force);
-            rb.AddTorque(result.Torque, ForceMode.Force);
-
+            
+            // rb.AddForce(result.Force, ForceMode.Force);
+            // rb.AddTorque(result.Torque, ForceMode.Force);
+            Vector3 scaledForce = result.Force * forceScale;
+            Vector3 scaledTorque = result.Torque * forceScale;
+                        
+            rb.AddForce(scaledForce, ForceMode.Force);
+            rb.AddTorque(scaledTorque, ForceMode.Force);
+            
+            if (logForces)
+            {
+                Debug.Log($"Buoyancy: {scaledForce.y:F0}N, SubTris: {result.SubmergedTriangleCount}");
+            }
+            
             var submersion = (float)result.SubmergedTriangleCount / Mathf.Max(1, _worldHullTriangles.Length);
             ApplyDamping(submersion);
 
             SubmersionRatio = submersion;
-            TotalBuoyancy = result.Force.y;
+            TotalBuoyancy = scaledForce.y;
         }
 
         public float TotalBuoyancy { get; private set; }
