@@ -81,28 +81,55 @@ namespace SeaLegs
 
         private void EnterPlatform(MovingPlatform platform)
         {
-            // set current platform
-            // where am I on the real boat
-            // where is that spot on the static boat?
-            // set position of rb to static world pos
+            // Set current platform
+            currentPlatform = platform;
+            isOnPlatform = true;
             
-            // subtract boat velocity to enter boat's reference frame
+            // Local position on the real boat
+            Vector3 localPos = platform.transform.InverseTransformPoint(transform.position);
+            
+            // Equivalent position on static boat
+            Vector3 staticWorldPos = platform.StaticClone.TransformPoint(localPos);
+            
+            // Set position of rb to static world pos
+            rigidbody.position = staticWorldPos;
+            
+            // Subtract boat velocity to enter boat's reference frame
             Vector3 platformVelocity = platform.Rb.GetPointVelocity(transform.position);
             rigidbody.linearVelocity -= platformVelocity;
         }
         
         private void ExitPlatform(MovingPlatform platform)
         {
-            // where am I on the static boat
-            // where is that spot on the real boat?
-            // set position of rb to real boat pos
+            // Pos on the static boat
+            Vector3 localPos = platform.StaticClone.InverseTransformPoint(rigidbody.position);
+            // Equivalent position on the real boat
+            Vector3 realWorldPos = currentPlatform.transform.TransformPoint(localPos);
+            // Set position of rb to real boat pos
+            rigidbody.position = realWorldPos;
+            
+            // Convert back to world reference frame
+            Vector3 platformVelocity = currentPlatform.Rb.GetPointVelocity(realWorldPos);
+            rigidbody.linearVelocity += platformVelocity;
             
             // unset current platform
+            currentPlatform = null;
+            isOnPlatform = false;
         }
 
         private void SyncVisual()
         {
+            if (isOnPlatform && currentPlatform != null)
+            {
+                // Where is Rb relative to static boat?
+                // Where should visual appear on real boat?
+            }
+            else
+            {
+                _playerMesh.position = rigidbody.position;
+            }
             
+            _playerMesh.rotation = orientation;
         }
         
         private void UpdateInputs()
@@ -142,15 +169,20 @@ namespace SeaLegs
             if (grounded)
             {
                 var platform = hit.collider.GetComponent<MovingPlatform>();
-                if (platform != null)
+                if (platform != null && !isOnPlatform)
                     EnterPlatform(platform);
-                else if (platform == null)
+                else if (platform == null && isOnPlatform)
                     ExitPlatform(platform);
+            } else if (isOnPlatform)
+            {
+                // ExitPlatform(platform);
             }
             
             if (jumpQueued && grounded) Jump();
 
             isGrounded = grounded; // we set this after so that we dont have any weird bugs with grounding for a frame. order matters
+            
+            SyncVisual();
         }
 
         private void ApplyMovementForces()
