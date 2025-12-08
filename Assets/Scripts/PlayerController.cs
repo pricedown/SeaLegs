@@ -119,10 +119,15 @@ namespace SeaLegs
 
         private void SyncVisual()
         {
+            if (_playerMesh == null)
+                return;
+            
             if (isOnPlatform && currentPlatform != null)
             {
                 // Where is Rb relative to static boat?
+                Vector3 localPos = currentPlatform.StaticClone.InverseTransformPoint(rigidbody.position);
                 // Where should visual appear on real boat?
+                _playerMesh.position = currentPlatform.transform.TransformPoint(localPos);
             }
             else
             {
@@ -162,13 +167,11 @@ namespace SeaLegs
 
         private void FixedUpdate()
         {
-            ApplyMovementForces();
-
             // when we jump, we jump relative to the boat
             bool grounded = PerformGroundCheck(out RaycastHit hit); // update ground check first before jump
             if (grounded)
             {
-                var platform = hit.collider.GetComponent<MovingPlatform>();
+                var platform = hit.collider.GetComponentInParent<MovingPlatform>();
                 if (platform != null && !isOnPlatform)
                     EnterPlatform(platform);
                 else if (platform == null && isOnPlatform)
@@ -177,6 +180,8 @@ namespace SeaLegs
             {
                 ExitPlatform();
             }
+            
+            ApplyMovementForces();
             
             if (jumpQueued && grounded) Jump();
 
