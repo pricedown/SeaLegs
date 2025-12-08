@@ -186,7 +186,10 @@ namespace SeaLegs
             if (jumpQueued && grounded) Jump();
 
             isGrounded = grounded; // we set this after so that we dont have any weird bugs with grounding for a frame. order matters
-            
+        }
+
+        private void LateUpdate()
+        {
             SyncVisual();
         }
 
