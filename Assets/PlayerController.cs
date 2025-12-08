@@ -110,7 +110,12 @@ namespace SeaLegs
 
         private void ApplyMovementForces()
         {
+            // calculate movement direction
+            Vector3 baseDirection = new Vector3(input.x, 0, input.z).normalized;
+            Vector3 moveDirection = orientation * baseDirection;
 
+            // apply force in direction of input (with respect to orientation)
+            rigidbody.AddForce(moveDirection * _baseMovementSpeed, ForceMode.Force);
         }
 
         private void Jump()
