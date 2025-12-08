@@ -24,7 +24,7 @@ namespace SeaLegs
         {
             _searchParams.startPositionWS = position;
             waterSurface.ProjectPointOnWaterSurface(_searchParams, out _searchResult);
-            return (Vector3)_searchResult.projectedPositionWS -  new Vector3(0, waterSurface.transform.position.y, 0);
+            return (Vector3)_searchResult.projectedPositionWS - new Vector3(0, waterSurface.transform.position.y, 0);
         }
 
         public override float GetHeightAboveWater(Vector3 point)

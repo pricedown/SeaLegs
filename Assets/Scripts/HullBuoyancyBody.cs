@@ -69,8 +69,6 @@ namespace SeaLegs
 
             rb.AddForce(Physics.gravity, ForceMode.Acceleration);
 
-            // rb.AddForce(result.Force, ForceMode.Force);
-            // rb.AddTorque(result.Torque, ForceMode.Force);
             var scaledForce = result.Force * settings.forceScale;
             var scaledTorque = result.Torque * settings.forceScale;
 
