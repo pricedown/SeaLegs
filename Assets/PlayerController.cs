@@ -2,6 +2,7 @@ using UnityEngine;
 
 namespace SeaLegs
 {
+    [RequireComponent(typeof(Rigidbody))]
     public class PlayerController : MonoBehaviour
     {
         // reparented to whatever you land on, not what is directly below you (raycast directly down)
@@ -9,14 +10,18 @@ namespace SeaLegs
         [Header("Movement Parameters")]
         [SerializeField]
         private float _baseMovementSpeed = 1.0f;
+        [SerializeField]
+        private float _gravity = -9.81f;
 
         [Header("Boat Parameters")]
         [SerializeField]
-        private float _rayLength;
+        private float _groundRayLength;
+        [SerializeField]
+        private float _groundCheckRadius;
+        [SerializeField]
+        private LayerMask _groundLayer;
 
         [Header("Camera Movement")]
-        [SerializeField]
-        private Rigidbody _rigidbody;
         [SerializeField]
         private Transform _cameraHolder;
         [SerializeField]
@@ -29,9 +34,23 @@ namespace SeaLegs
         [SerializeField]
         private float _yRotConstraint = 85.0f;
 
+        Rigidbody rigidbody;
+        bool jumpQueued;
+        bool isGrounded;
+        float jumpPressedTimestamp;
+
         Quaternion orientation;
         Vector2 rotation = Vector2.zero;
         Vector3 input = Vector3.zero;
+
+        private void Awake()
+        {
+            rigidbody = GetComponent<Rigidbody>();
+
+            rigidbody.freezeRotation = true;
+            rigidbody.isKinematic = false;
+            rigidbody.useGravity = false; // using custom gravity for more customization
+        }
 
         private void Update()
         {
@@ -39,10 +58,23 @@ namespace SeaLegs
             UpdateInputs();
         }
 
+        private void UpdateGroundCheck()
+        {
+            Vector3 groundCheckPosition = new Vector3(0, -_groundRayLength, 0) + transform.position;
+
+            isGrounded = Physics.CheckSphere(groundCheckPosition, _groundCheckRadius, _groundLayer);
+        }
+
         private void UpdateInputs()
         {
             input.x = Input.GetAxisRaw("Horizontal");
             input.z = Input.GetAxisRaw("Vertical");
+
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                jumpQueued = true;
+                jumpPressedTimestamp = Time.time; // record time stamp in which player pressed space
+            }
         }
 
         /// <summary>
@@ -64,11 +96,27 @@ namespace SeaLegs
         private void FixedUpdate()
         {
             ApplyMovementForces();
+
+            // when we jump, we jump relative to the boat
+            UpdateGroundCheck(); // update ground check first before jump
+            if (jumpQueued) Jump();
         }
 
         private void ApplyMovementForces()
         {
 
+        }
+
+        private void Jump()
+        {
+
+        }
+
+        private void OnDrawGizmosSelected()
+        {
+            Vector3 groundCheckPos = new Vector3(0, -_groundRayLength, 0) + transform.position;
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(groundCheckPos, _groundCheckRadius);
         }
     }
 }
