@@ -50,6 +50,9 @@ namespace SeaLegs
         Quaternion orientation;
         Vector2 rotation = Vector2.zero;
         Vector3 input = Vector3.zero;
+        
+        MovingPlatform currentPlatform;
+        private bool isOnPlatform;
 
         private void Awake()
         {
@@ -76,6 +79,32 @@ namespace SeaLegs
             return Physics.SphereCast(transform.position, _groundCheckRadius, Vector3.down, out hit, _groundRayLength, _groundLayer);
         }
 
+        private void EnterPlatform(MovingPlatform platform)
+        {
+            // set current platform
+            // where am I on the real boat
+            // where is that spot on the static boat?
+            // set position of rb to static world pos
+            
+            // subtract boat velocity to enter boat's reference frame
+            Vector3 platformVelocity = platform.Rb.GetPointVelocity(transform.position);
+            rigidbody.linearVelocity -= platformVelocity;
+        }
+        
+        private void ExitPlatform(MovingPlatform platform)
+        {
+            // where am I on the static boat
+            // where is that spot on the real boat?
+            // set position of rb to real boat pos
+            
+            // unset current platform
+        }
+
+        private void SyncVisual()
+        {
+            
+        }
+        
         private void UpdateInputs()
         {
             input.x = Input.GetAxisRaw("Horizontal");
@@ -110,6 +139,15 @@ namespace SeaLegs
 
             // when we jump, we jump relative to the boat
             bool grounded = PerformGroundCheck(out RaycastHit hit); // update ground check first before jump
+            if (grounded)
+            {
+                var platform = hit.collider.GetComponent<MovingPlatform>();
+                if (platform != null)
+                    EnterPlatform(platform);
+                else if (platform == null)
+                    ExitPlatform(platform);
+            }
+            
             if (jumpQueued && grounded) Jump();
 
             isGrounded = grounded; // we set this after so that we dont have any weird bugs with grounding for a frame. order matters
