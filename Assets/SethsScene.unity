@@ -249,7 +249,7 @@ GameObject:
   - component: {fileID: 161510029}
   - component: {fileID: 161510028}
   - component: {fileID: 161510027}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3887,8 +3887,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _baseMovementSpeed: 3
-  _rayLength: 1
-  _rigidbody: {fileID: 1940423843}
+  _gravity: -9.81
+  _groundRayLength: 0.7
+  _groundCheckRadius: 0.4
+  _groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
   _cameraHolder: {fileID: 779976765}
   _playerCamera: {fileID: 1572711104}
   _playerMesh: {fileID: 0}

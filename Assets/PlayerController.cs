@@ -12,6 +12,10 @@ namespace SeaLegs
         private float _baseMovementSpeed = 1.0f;
         [SerializeField]
         private float _gravity = -9.81f;
+        [SerializeField]
+        private float _jumpBufferWindow = 0.1f;
+        [SerializeField]
+        private float _jumpPower = 5.0f;
 
         [Header("Boat Parameters")]
         [SerializeField]
@@ -58,11 +62,11 @@ namespace SeaLegs
             UpdateInputs();
         }
 
-        private void UpdateGroundCheck()
+        private bool PerformGroundCheck()
         {
             Vector3 groundCheckPosition = new Vector3(0, -_groundRayLength, 0) + transform.position;
 
-            isGrounded = Physics.CheckSphere(groundCheckPosition, _groundCheckRadius, _groundLayer);
+            return Physics.CheckSphere(groundCheckPosition, _groundCheckRadius, _groundLayer);
         }
 
         private void UpdateInputs()
@@ -98,8 +102,10 @@ namespace SeaLegs
             ApplyMovementForces();
 
             // when we jump, we jump relative to the boat
-            UpdateGroundCheck(); // update ground check first before jump
-            if (jumpQueued) Jump();
+            bool grounded = PerformGroundCheck(); // update ground check first before jump
+            if (jumpQueued && grounded) Jump();
+
+            isGrounded = grounded; // we set this after so that we dont have any weird bugs with grounding for a frame. order matters
         }
 
         private void ApplyMovementForces()
@@ -109,13 +115,24 @@ namespace SeaLegs
 
         private void Jump()
         {
+            jumpQueued = false;
 
+            // jump timestamp must be within window
+            if (Time.time - jumpPressedTimestamp > _jumpBufferWindow) return;
+
+            // cancel out y velocity, then apply impulse
+            rigidbody.linearVelocity = new Vector3(rigidbody.linearVelocity.x, 0, rigidbody.linearVelocity.z);
+            rigidbody.AddForce(Vector3.up * _jumpPower, ForceMode.Impulse); // apply jump force
         }
 
         private void OnDrawGizmosSelected()
         {
             Vector3 groundCheckPos = new Vector3(0, -_groundRayLength, 0) + transform.position;
             Gizmos.color = Color.blue;
+
+            if(isGrounded) Gizmos.color = Color.green;
+            else Gizmos.color = Color.red;
+            
             Gizmos.DrawSphere(groundCheckPos, _groundCheckRadius);
         }
     }
