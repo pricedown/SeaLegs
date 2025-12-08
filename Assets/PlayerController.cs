@@ -16,20 +16,33 @@ namespace SeaLegs
 
         [Header("Camera Movement")]
         [SerializeField]
+        private Rigidbody _rigidbody;
+        [SerializeField]
         private Transform _cameraHolder;
         [SerializeField]
         private Camera _playerCamera;
+        [SerializeField, Tooltip("The mesh that will represent the player, placed on the real ship")]
+        private Transform _playerMesh;
 
         [SerializeField]
         private float _sensitivity = 0.2f;
         [SerializeField]
         private float _yRotConstraint = 85.0f;
 
+        Quaternion orientation;
         Vector2 rotation = Vector2.zero;
+        Vector3 input = Vector3.zero;
 
         private void Update()
         {
             UpdateCamera();
+            UpdateInputs();
+        }
+
+        private void UpdateInputs()
+        {
+            input.x = Input.GetAxisRaw("Horizontal");
+            input.z = Input.GetAxisRaw("Vertical");
         }
 
         /// <summary>
@@ -37,19 +50,25 @@ namespace SeaLegs
         /// </summary>
         private void UpdateCamera()
         {
-            rotation.x += Input.GetAxis("Mouse X") * _sensitivity;
-            rotation.y += Input.GetAxis("Mouse Y") * _sensitivity;
-            rotation.y = Mathf.Clamp(rotation.y, -_yRotConstraint, _yRotConstraint);
+            float mouseX = Input.GetAxisRaw("Mouse X") * _sensitivity * Time.deltaTime;
+            float mouseY = Input.GetAxisRaw("Mouse Y") * _sensitivity * Time.deltaTime;
 
-            Quaternion angleX = Quaternion.AngleAxis(rotation.x, Vector3.up);
-            Quaternion angleY = Quaternion.AngleAxis(rotation.y, Vector3.left);
+            rotation.y += mouseX;
+            rotation.x -= mouseY;
+            rotation.x = Mathf.Clamp(rotation.x, -90.0f, 90.0f);
 
-            _cameraHolder.localRotation = angleX * angleY;
+            orientation = Quaternion.Euler(0, rotation.y, 0);
+            _cameraHolder.rotation = Quaternion.Euler(rotation.x, rotation.y, 0);
         }
 
         private void FixedUpdate()
         {
-            
+            ApplyMovementForces();
+        }
+
+        private void ApplyMovementForces()
+        {
+
         }
     }
 }

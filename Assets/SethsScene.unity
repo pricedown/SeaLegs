@@ -3886,11 +3886,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 960e7affa19c6144fb6d9ac5b16bccbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _baseMovementSpeed: 1
-  _rayLength: 0
+  _baseMovementSpeed: 3
+  _rayLength: 1
+  _rigidbody: {fileID: 1940423843}
   _cameraHolder: {fileID: 779976765}
   _playerCamera: {fileID: 1572711104}
-  _sensitivity: 0.2
+  _playerMesh: {fileID: 0}
+  _sensitivity: 100
   _yRotConstraint: 85
 --- !u!54 &1940423843
 Rigidbody:
@@ -4004,7 +4006,7 @@ Transform:
   m_GameObject: {fileID: 1940423841}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 51, y: 454.2, z: -20}
+  m_LocalPosition: {x: 51, y: 454.2, z: -24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
