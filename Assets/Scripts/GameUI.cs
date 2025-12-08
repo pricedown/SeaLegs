@@ -4,8 +4,6 @@ namespace SeaLegs
 {
     public class GameUI : MonoBehaviour
     {
-        // this is a pretty tightly coupled class :(
-
         [SerializeField]
         private GameObject _playerUIHolder;
 
