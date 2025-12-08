@@ -57,7 +57,10 @@ namespace SeaLegs
 
             rigidbody.freezeRotation = true;
             rigidbody.isKinematic = false;
-            rigidbody.useGravity = false; // using custom gravity for more customization
+            rigidbody.useGravity = false;
+
+            Cursor.visible = false;
+            Cursor.lockState = CursorLockMode.Locked;
         }
 
         private void Update()
