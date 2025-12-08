@@ -69,11 +69,11 @@ namespace SeaLegs
             UpdateInputs();
         }
 
-        private bool PerformGroundCheck()
+        private bool PerformGroundCheck(out RaycastHit hit)
         {
             Vector3 groundCheckPosition = new Vector3(0, -_groundRayLength, 0) + transform.position;
 
-            return Physics.CheckSphere(groundCheckPosition, _groundCheckRadius, _groundLayer);
+            return Physics.SphereCast(transform.position, _groundCheckRadius, Vector3.down, out hit, _groundRayLength, _groundLayer);
         }
 
         private void UpdateInputs()
@@ -109,7 +109,7 @@ namespace SeaLegs
             ApplyMovementForces();
 
             // when we jump, we jump relative to the boat
-            bool grounded = PerformGroundCheck(); // update ground check first before jump
+            bool grounded = PerformGroundCheck(out RaycastHit hit); // update ground check first before jump
             if (jumpQueued && grounded) Jump();
 
             isGrounded = grounded; // we set this after so that we dont have any weird bugs with grounding for a frame. order matters
