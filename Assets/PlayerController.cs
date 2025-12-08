@@ -16,6 +16,10 @@ namespace SeaLegs
         private float _jumpBufferWindow = 0.1f;
         [SerializeField]
         private float _jumpPower = 5.0f;
+        [SerializeField]
+        private float _movementDrag = 4.0f;
+        [SerializeField]
+        private float _airDrag = 0.0f;
 
         [Header("Boat Parameters")]
         [SerializeField]
@@ -110,12 +114,27 @@ namespace SeaLegs
 
         private void ApplyMovementForces()
         {
+            if (isGrounded) HandleGroundMovement();
+            else HandleAirMovement();
+
+            // fake gravity
+            rigidbody.AddForce(Vector3.down * _gravity, ForceMode.Acceleration);
+        }
+
+        private void HandleGroundMovement()
+        {
             // calculate movement direction
             Vector3 baseDirection = new Vector3(input.x, 0, input.z).normalized;
             Vector3 moveDirection = orientation * baseDirection;
 
             // apply force in direction of input (with respect to orientation)
+            rigidbody.linearDamping = _movementDrag;
             rigidbody.AddForce(moveDirection * _baseMovementSpeed, ForceMode.Force);
+        }
+
+        private void HandleAirMovement()
+        {
+            rigidbody.linearDamping = _airDrag;
         }
 
         private void Jump()
