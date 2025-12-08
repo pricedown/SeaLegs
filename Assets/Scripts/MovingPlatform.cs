@@ -1,13 +1,12 @@
-using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace SeaLegs
 {
     public class MovingPlatform : MonoBehaviour
     {
-        [SerializeField] private Transform _staticClone;
+        [FormerlySerializedAs("_staticCounterpart")] [SerializeField] private Transform _staticClone;
         public Transform StaticClone => _staticClone;
-        
         private Rigidbody _rb;
         public Rigidbody Rb => _rb;
 

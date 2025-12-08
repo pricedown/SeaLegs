@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: HullBuoyancy
   m_EditorClassIdentifier: 
   waterDensity: 1025
-  forceScale: 0.04
+  forceScale: 0.13
   linearDamping: 1.74
   angularDamping: 18.17
   showSubmergedTriangles: 1

@@ -50,9 +50,9 @@ namespace SeaLegs
         Quaternion orientation;
         Vector2 rotation = Vector2.zero;
         Vector3 input = Vector3.zero;
-        
+
         MovingPlatform currentPlatform;
-        private bool isOnPlatform;
+        bool isOnPlatform;
 
         private void Awake()
         {
@@ -78,10 +78,9 @@ namespace SeaLegs
 
             return Physics.SphereCast(transform.position, _groundCheckRadius, Vector3.down, out hit, _groundRayLength, _groundLayer);
         }
-
+        
         private void EnterPlatform(MovingPlatform platform)
         {
-            // Set current platform
             currentPlatform = platform;
             isOnPlatform = true;
             
@@ -90,17 +89,20 @@ namespace SeaLegs
             
             // Equivalent position on static boat
             Vector3 staticWorldPos = platform.StaticClone.TransformPoint(localPos);
-            
             // Set position of rb to static world pos
             rigidbody.position = staticWorldPos;
             
             // Subtract boat velocity to enter boat's reference frame
-            Vector3 platformVelocity = platform.Rb.GetPointVelocity(transform.position);
+            Vector3 worldPoint = transform.position;
+            Vector3 platformVelocity = platform.Rb.GetPointVelocity(worldPoint);
             rigidbody.linearVelocity -= platformVelocity;
         }
-        
+
         private void ExitPlatform()
         {
+            if (currentPlatform == null) 
+                return;
+
             // Pos on the static boat
             Vector3 localPos = currentPlatform.StaticClone.InverseTransformPoint(rigidbody.position);
             // Equivalent position on the real boat
@@ -108,20 +110,17 @@ namespace SeaLegs
             // Set position of rb to real boat pos
             rigidbody.position = realWorldPos;
             
-            // Convert back to world reference frame
             Vector3 platformVelocity = currentPlatform.Rb.GetPointVelocity(realWorldPos);
             rigidbody.linearVelocity += platformVelocity;
-            
-            // unset current platform
+
             currentPlatform = null;
             isOnPlatform = false;
         }
 
         private void SyncVisual()
         {
-            if (_playerMesh == null)
-                return;
-            
+            if (_playerMesh == null) return;
+
             if (isOnPlatform && currentPlatform != null)
             {
                 // Where is Rb relative to static boat?
@@ -131,12 +130,12 @@ namespace SeaLegs
             }
             else
             {
-                _playerMesh.position = rigidbody.position;
+                _playerMesh.position = transform.position;
             }
-            
-            _playerMesh.rotation = orientation;
+    
+            _playerMesh.rotation = orientation; // yaw only, set in UpdateCamera()
         }
-        
+
         private void UpdateInputs()
         {
             input.x = Input.GetAxisRaw("Horizontal");
@@ -176,13 +175,14 @@ namespace SeaLegs
                     EnterPlatform(platform);
                 else if (platform == null && isOnPlatform)
                     ExitPlatform();
-            } else if (isOnPlatform)
+            }
+            else if (isOnPlatform && isGrounded)
             {
                 ExitPlatform();
             }
-            
+
             ApplyMovementForces();
-            
+
             if (jumpQueued && grounded) Jump();
 
             isGrounded = grounded; // we set this after so that we dont have any weird bugs with grounding for a frame. order matters
