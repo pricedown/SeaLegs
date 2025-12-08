@@ -99,10 +99,10 @@ namespace SeaLegs
             rigidbody.linearVelocity -= platformVelocity;
         }
         
-        private void ExitPlatform(MovingPlatform platform)
+        private void ExitPlatform()
         {
             // Pos on the static boat
-            Vector3 localPos = platform.StaticClone.InverseTransformPoint(rigidbody.position);
+            Vector3 localPos = currentPlatform.StaticClone.InverseTransformPoint(rigidbody.position);
             // Equivalent position on the real boat
             Vector3 realWorldPos = currentPlatform.transform.TransformPoint(localPos);
             // Set position of rb to real boat pos
@@ -172,10 +172,10 @@ namespace SeaLegs
                 if (platform != null && !isOnPlatform)
                     EnterPlatform(platform);
                 else if (platform == null && isOnPlatform)
-                    ExitPlatform(platform);
+                    ExitPlatform();
             } else if (isOnPlatform)
             {
-                // ExitPlatform(platform);
+                ExitPlatform();
             }
             
             if (jumpQueued && grounded) Jump();
